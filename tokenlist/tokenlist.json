@@ -16,7 +16,7 @@
       "name": "USDT.z",
       "symbol": "USDTz",
       "decimals": 18,
-      "logoURI": "https://khanitohm.github.io/usdtz.png/",
+      "logoURI": "https://raw.githubusercontent.com/khanitohm/usdt-token/master/logo/logo.png",
       "tags": ["stablecoin"]
     }
   ],
