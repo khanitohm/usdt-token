@@ -1,0 +1,28 @@
+{
+  "name": "USDTz Token List",
+  "logoURI": "https://khanitohm.github.io/usdtz.png/",
+  "keywords": ["usdt", "stablecoin", "bsc"],
+  "tags": {
+    "stablecoin": {
+      "name": "Stablecoin",
+      "description": "Tokens that are pegged to stable assets"
+    }
+  },
+  "timestamp": "2025-09-21T00:00:00+00:00",
+  "tokens": [
+    {
+      "chainId": 56,
+      "address": "0xf341044850be6Df1C0867CCaA161DA8AD32039A7",
+      "name": "USDT.z",
+      "symbol": "USDTz",
+      "decimals": 18,
+      "logoURI": "https://khanitohm.github.io/usdtz.png/",
+      "tags": ["stablecoin"]
+    }
+  ],
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  }
+}
