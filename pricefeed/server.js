@@ -7,7 +7,7 @@ app.use(cors());
 app.get("/price", (req, res) => {
   res.json({
     symbol: "USDTz",
-    price: 0.9804,
+    price: 0.97087,
     currency: "USD",
     timestamp: new Date().toISOString()
   });
