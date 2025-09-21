@@ -8,5 +8,9 @@ module.exports = {
       url: process.env.RPC_URL,
       accounts: [process.env.PRIVATE_KEY],
     },
+    'bsc-testnet': {
+      url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+      accounts: [process.env.PRIVATE_KEY],
+    },
   },
 };
