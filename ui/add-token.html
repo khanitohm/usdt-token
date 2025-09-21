@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Add USDTz to MetaMask</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; padding: 20px; }
+    .card { border: 1px solid #ddd; padding: 16px; border-radius: 8px; max-width: 540px; }
+    img.logo { width: 48px; height: 48px; vertical-align: middle; margin-right: 8px; }
+    button { padding: 8px 12px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2><img class="logo" id="logo" src="https://raw.githubusercontent.com/khanitohm/usdt-token/master/logo/logo.png" alt="logo"/> USDTz (BSC)</h2>
+    <p>Contract: <code id="contract">0xf341044850be6Df1C0867CCaA161DA8AD32039A7</code></p>
+    <p>Decimals: <span id="decimals">18</span></p>
+    <p>Balance: <strong id="balance">-</strong></p>
+    <p>Value (USD): <strong id="value">-</strong></p>
+    <div style="margin-top:12px">
+      <button id="connect">Connect MetaMask</button>
+      <button id="add">Add token to MetaMask</button>
+      <button id="refresh">Refresh balance/value</button>
+      <button id="testPrice" style="background-color:#ffffcc;">Test USD Value</button>
+    </div>
+    <p style="margin-top:12px;font-size:12px;color:#666">Price: Fixed at $1.00 USD per USDTz (hardcoded)</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.9.2/dist/ethers.min.js"></script>
+  <script>
+  // Demo mode: pass ?demo=1&amount=100000&price=1 in the URL to force display
+  const params = new URLSearchParams(location.search);
+  const DEMO_MODE = ['1','true','yes','on'].includes((params.get('demo')||'').toLowerCase());
+  const DEMO_AMOUNT = Number(params.get('amount') || '100000');
+  const DEMO_PRICE = Number(params.get('price') || '1');
+    const contractAddress = document.getElementById('contract').textContent.trim();
+    const logoURI = 'https://raw.githubusercontent.com/khanitohm/usdt-token/master/logo/logo.png';
+    const tokenSymbol = 'USDTz';
+    const tokenDecimals = 18;
+
+    async function connect() {
+      if (!window.ethereum) return alert('MetaMask not found');
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      document.getElementById('connect').textContent = 'Connected';
+      refresh();
+    }
+
+    async function addToken() {
+      if (!window.ethereum) return alert('MetaMask not found');
+      const wasAdded = await window.ethereum.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20',
+          options: {
+            address: contractAddress,
+            symbol: tokenSymbol,
+            decimals: tokenDecimals,
+            image: logoURI,
+          },
+        },
+      });
+      alert(wasAdded ? 'Token added (or already present)' : 'User rejected');
+      refresh();
+    }
+
+    async function fetchPrice() {
+      console.log('fetchPrice() called');
+      // วิธีแก้ง่าย ๆ: ใส่ราคาไว้ในโค้ดโดยตรง
+      const fixedPrice = 1.0; // 1 USDTz = $1.00
+      console.log('Returning fixed price:', fixedPrice);
+      return fixedPrice;
+    }
+
+    async function refresh() {
+      if (DEMO_MODE) {
+        // Force display without any network calls
+        const bal = Number.isFinite(DEMO_AMOUNT) ? DEMO_AMOUNT : 100000;
+        const price = Number.isFinite(DEMO_PRICE) ? DEMO_PRICE : 1;
+        document.getElementById('balance').textContent = bal.toLocaleString(undefined, { maximumFractionDigits: 6 });
+        const usdValue = bal * price;
+        document.getElementById('value').textContent = '$' + usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return;
+      }
+
+      // Normal mode: read balance via provider (MetaMask or fallback)
+      let provider;
+      if (window.ethereum) provider = new ethers.BrowserProvider(window.ethereum);
+      else provider = new ethers.JsonRpcProvider();
+      try {
+        const abi = [ 'function balanceOf(address) view returns (uint256)', 'function decimals() view returns (uint8)' ];
+        const contract = new ethers.Contract(contractAddress, abi, provider);
+        const accounts = (window.ethereum && await window.ethereum.request({ method: 'eth_accounts' })) || [];
+        const addr = accounts[0] || null;
+        const balRaw = await contract.balanceOf(addr || '0x0000000000000000000000000000000000000000');
+        const decimals = tokenDecimals;
+        const bal = Number(ethers.formatUnits(balRaw.toString(), decimals));
+        document.getElementById('balance').textContent = bal.toLocaleString(undefined, { maximumFractionDigits: 6 });
+
+        const price = await fetchPrice();
+        console.log('Final price received:', price, 'Type:', typeof price);
+        if (price !== null && price !== undefined && !isNaN(price) && price > 0) {
+          const usdValue = bal * Number(price);
+          document.getElementById('value').textContent = '$' + usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else {
+          document.getElementById('value').textContent = 'No conversion rate available';
+        }
+      } catch (e) {
+        console.warn(e);
+        document.getElementById('balance').textContent = 'error';
+        document.getElementById('value').textContent = '-';
+      }
+    }
+
+    async function testPrice() {
+      console.log('=== Testing Price Function ===');
+      const price = await fetchPrice();
+      console.log('Price result:', price);
+
+      // จำลอง balance = 100,000
+      const testBalance = 100000;
+      const usdValue = testBalance * Number(price);
+      console.log('Test calculation:', testBalance, 'x', price, '=', usdValue);
+
+      document.getElementById('value').textContent = '$' + usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById('balance').textContent = testBalance.toLocaleString();
+
+      alert(`Test: ${testBalance} USDTz = $${usdValue.toLocaleString()}`);
+    }
+
+    // Demo banner
+    if (DEMO_MODE) {
+      const p = document.createElement('p');
+      p.textContent = `Demo mode active: amount=${DEMO_AMOUNT.toLocaleString()} USDTz @ $${DEMO_PRICE}`;
+      p.style.color = '#0a0';
+      p.style.fontSize = '12px';
+      document.querySelector('.card').appendChild(p);
+    }
+
+    document.getElementById('connect').addEventListener('click', connect);
+    document.getElementById('add').addEventListener('click', addToken);
+    document.getElementById('refresh').addEventListener('click', refresh);
+    document.getElementById('testPrice').addEventListener('click', testPrice);
+  </script>
+</body>
+</html>
