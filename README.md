@@ -42,11 +42,10 @@ API: `http://localhost:3000/price`
    - URL: `https://khanitohm.github.io/tokenlist.json`
 
 3. **Expected Display**:
-   - 📤 Logo: USDTz logo from hosted URL
-   - Balance: 100,000 USDTz
-   - Value: $100,000.00 (at $1.00/USD rate)
-
-### Wallet Integration Tips
+### Expected Display in Wallet
+- **Logo**: USDTz logo from hosted URL
+- **Balance**: 100,000.00 USDTz (or current balance)
+- **Value**: $100,000.00 (at $1.00/USD rate from price feed)### Wallet Integration Tips
 - Ensure price feed is running for accurate USD values
 - Use BSC mainnet RPC: `https://bsc-dataseed.binance.org/`
 - Token follows ERC-20 standard on BSC
