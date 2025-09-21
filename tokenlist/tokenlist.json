@@ -1,6 +1,6 @@
 {
   "name": "USDTz Token List",
-  "logoURI": "https://khanitohm.github.io/usdtz.png/",
+  "logoURI": "https://raw.githubusercontent.com/khanitohm/usdt-token/master/logo/logo.png",
   "keywords": [
     "usdt",
     "stablecoin",
@@ -20,7 +20,7 @@
       "name": "USDT.z",
       "symbol": "USDTz",
       "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/khanitohm/usdt-token/master/logo/logo.png",
+  "logoURI": "https://raw.githubusercontent.com/khanitohm/usdt-token/master/logo/logo.png",
       "tags": [
         "stablecoin"
       ]
