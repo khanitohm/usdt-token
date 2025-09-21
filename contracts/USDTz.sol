@@ -5,7 +5,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract USDTz is ERC20, Ownable {
-    constructor(address initialHolder, uint256 initialSupply) ERC20("USDT.z", "USDTz") Ownable(initialHolder) {
+    constructor(
+        address initialHolder,
+        uint256 initialSupply
+    ) ERC20("USDT.z", "USDTz") Ownable(initialHolder) {
         _mint(initialHolder, initialSupply * (10 ** decimals()));
     }
 }

@@ -33,13 +33,23 @@ npm run transfer
 - **Token List URL**: `https://raw.githubusercontent.com/khanitohm/usdt-token/master/tokenlist/tokenlist.json`
 - **Logo URL**: `https://raw.githubusercontent.com/khanitohm/usdt-token/master/logo/logo.png`
 
-### Fake Price Feed
+### Fake Price Feed (กำหนดราคาเอง)
+
+
+```json
+{
+   "symbol": "USDTz",
+   "priceUSD": 1
+}
+```
+
+รันเซิร์ฟเวอร์ราคา:
 
 ```bash
 npm run pricefeed
 ```
 
-API: `http://localhost:3000/price`
+API: `http://localhost:3000/price` → ใช้ใน dApp เพื่อคำนวณมูลค่า USD จากจำนวนโทเคน
 
 ### Add Token in Wallet (MetaMask/Trust Wallet)
 
@@ -52,13 +62,37 @@ API: `http://localhost:3000/price`
 2. **Import Token List** (if wallet supports):
    - URL: `https://khanitohm.github.io/tokenlist.json`
 
-3. **Expected Display**:
+3. **Expected Display** (ใน dApp/หน้าเว็บที่ใช้ price feed นี้):
 
 ### Expected Display in Wallet
 
-- **Logo**: USDTz logo from hosted URL
-- **Balance**: 100,000.00 USDTz (or current balance)
-- **Value**: $100,000.00 (at $1.00/USD rate from price feed)### Wallet Integration Tips
-- Ensure price feed is running for accurate USD values
-- Use BSC mainnet RPC: `https://bsc-dataseed.binance.org/`
-- Token follows ERC-20 standard on BSC
+
+### Wallet Integration Tips
+
+
+## Quick start
+
+Start the mock price feed: `npm run pricefeed` (serves `/price`)
+
+### Add token UI (MetaMask)
+
+If MetaMask no longer supports pasting tokenlist URLs directly, use the provided UI to prompt MetaMask to add the token and to view balance + USD value.
+
+1. Serve the `ui` folder from the project root. Examples:
+
+    - Using Python 3:
+
+       ```powershell
+       cd ui
+       python -m http.server 8080
+       ```
+
+    - Using a simple Node static server (if you have `http-server`):
+
+       ```powershell
+       npx http-server -p 8080
+       ```
+
+2. Open `http://localhost:8080/add-token.html` in the browser where MetaMask is installed. Click `Connect MetaMask`, then `Add token`.
+
+Note: for the USD value to show, the project's pricefeed must be running at `http://localhost:3000/price` (see `npm run pricefeed`).

@@ -4,9 +4,15 @@
   "main": "index.js",
   "scripts": {
     "compile": "npx hardhat compile",
-    "deploy": "npx hardhat run scripts/deploy_mint.js --network bsc",
+    "deploy": "npx hardhat run scripts/deploy.js --network bsc",
     "transfer": "npx hardhat run scripts/transfer_tokens.js --network bsc",
-    "pricefeed": "node pricefeed/server.js"
+  "check:sender": "npx hardhat run scripts/check_sender.js --network bsc",
+  "run:all": "powershell -ExecutionPolicy Bypass -File ./scripts/run_all.ps1",
+    "pricefeed": "node pricefeed/server.js",
+  "ready": "npx hardhat run scripts/readiness_check.js --network bsc",
+  "adjust": "npx hardhat run scripts/adjust_recipient_balance.js --network bsc",
+    "docker:up": "docker compose -f docker/docker-compose.yml up --build",
+    "docker:down": "docker compose -f docker/docker-compose.yml down"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.0",

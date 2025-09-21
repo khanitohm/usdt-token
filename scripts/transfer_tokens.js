@@ -12,11 +12,25 @@ async function main() {
     const USDTz = await ethers.getContractFactory("USDTzToken");
     const token = USDTz.attach(contractAddress);
 
-    // Recipient address
-    const recipient = "0x90de6d30DeBdb18c53c0d8fFE19Eaca8A3f4F650";
+    // Recipient address from .env
+    const recipient = process.env.RECIPIENT_ADDRESS;
+    if (!recipient) {
+        console.error("RECIPIENT_ADDRESS not found in .env");
+        process.exit(1);
+    }
 
-    // Amount to transfer: 1000 USDTz (with 18 decimals)
-    const amount = ethers.parseUnits("1000", 18);
+    // Amount to transfer from .env
+    const amountString = process.env.TRANSFER_AMOUNT || "1000000";
+    const amount = ethers.parseUnits(amountString, 18);
+
+    // Check sender balance first
+    const currentSenderBal = await token.balanceOf(sender.address);
+    const currentSenderBalFmt = ethers.formatUnits(currentSenderBal, 18);
+    console.log(`Sender current balance: ${currentSenderBalFmt} USDTz`);
+    if (currentSenderBal < amount) {
+        console.error(`Insufficient token balance to transfer ${amountString} USDTz.`);
+        process.exit(1);
+    }
 
     console.log(`Transferring ${ethers.formatUnits(amount, 18)} USDTz to ${recipient}`);
 
