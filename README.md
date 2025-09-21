@@ -22,8 +22,8 @@ npm run transfer
 ### Token Metadata
 - **Token List**: `tokenlist/tokenlist.json`
 - **Host JSON + Logo** on GitHub Pages/CDN
-- **Token List URL**: `https://khanitohm.github.io/tokenlist.json` (upload to GitHub)
-- **Logo URL**: `https://khanitohm.github.io/usdtz.png/`
+- **Token List URL**: `https://raw.githubusercontent.com/khanitohm/usdt-token/master/tokenlist/tokenlist.json`
+- **Logo URL**: `https://raw.githubusercontent.com/khanitohm/usdt-token/master/logo/logo.png`
 
 ### Fake Price Feed
 ```bash
